@@ -1,0 +1,5 @@
+get Image
+get numbers from Image
+create mapping for numbers
+solve
+show each step
