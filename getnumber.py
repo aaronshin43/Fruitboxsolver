@@ -10,7 +10,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 #Grayscale simplifies the image to a 2D array (height × width)
 
 circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, dp=1, minDist=50,
-                           param1=50, param2=30, minRadius=17, maxRadius=30)
+                           param1=50, param2=20, minRadius=15, maxRadius=33)
 
 if circles is not None:
     circles = np.round(circles[0, :]).astype("int")
