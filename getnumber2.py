@@ -61,7 +61,7 @@ for contour in contours:
         #_, thresh = cv2.threshold(gray, 215, 255, cv2.THRESH_BINARY_INV)
         _, thresh = cv2.threshold(sharpened, 230, 255, cv2.THRESH_BINARY)
         thresh = cv2.resize(thresh, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_NEAREST)
-        cv2.imwrite("cropped_apple.png", thresh)
+        cv2.imwrite("cropped_apple2.png", thresh)
         
         #cv2.imwrite("cropped_apple.png", cropped)
         #number = pytesseract.image_to_string(Image.open("cropped_apple.png"), 
