@@ -27,10 +27,10 @@ contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 if contours:
     largest_contour = max(contours, key=cv2.contourArea)
     canvas_x, canvas_y, canvas_w, canvas_h = cv2.boundingRect(largest_contour)
-
+    #print(canvas_x, canvas_y, canvas_w, canvas_h)
     # Crop the canvas from the screen
     canvas = screen_bgr[canvas_y:canvas_y+canvas_h, canvas_x:canvas_x+canvas_w]
-
+    #40 215 1063 689
     # Save for verification
     cv2.imwrite("game_screen.png", canvas)
 else:
@@ -61,19 +61,25 @@ for row in range(rows):
         cropped = canvas[y_start:y_end, x_start:x_end]
         #cv2.imwrite("cropped_apple.png", cropped)
 
-        #gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
         # kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
         # sharpened = cv2.filter2D(gray, -1, kernel)
-        #_, thresh = cv2.threshold(gray, 225, 255, cv2.THRESH_BINARY_INV)
-        #thresh = cv2.resize(thresh, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_NEAREST)
-        cv2.imwrite("cropped_apple.png", cropped)
+        _, thresh = cv2.threshold(gray, 220, 255, cv2.THRESH_BINARY_INV)
+        #thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                        #cv2.THRESH_BINARY_INV, 11, 2)
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
+        morphed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+        resized = cv2.resize(morphed, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_CUBIC)
+        
+        
+        cv2.imwrite("cropped_apple.png", morphed)
 
         number = pytesseract.image_to_string(Image.open("cropped_apple.png"), 
                                             config='--psm 10 --oem 3 -c tessedit_char_whitelist=123456789 -c tessedit_char_blacklist=0OQqg --dpi 300')
         raw_number = number.strip()
         #print(f"Raw OCR at ({col + 1}, {row + 1}): '{raw_number}'")
-        # if not raw_number:
-        #     print(f"missed x:{col + 1}, y:{row + 1}")
+        if not raw_number:
+            print(f"missed x:{col + 1}, y:{row + 1}")
         if raw_number.isdigit() and 1 <= int(raw_number) <= 9:
             # Store top-left corner or center
             apples.append(int(raw_number))
