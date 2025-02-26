@@ -1,5 +1,4 @@
-get Image
-get numbers from Image
-create mapping for numbers
-solve
-show each step
+get Image - done
+get numbers from Image - done
+create mapping for numbers - done
+create algorithm to solve the game
