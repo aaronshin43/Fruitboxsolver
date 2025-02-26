@@ -47,6 +47,7 @@ crop_x = 20
 crop_y = 26
 #apple_width = 28
 #apple_height = 39
+sharp = 0.5
 
 apples = []
 for row in range(rows):
@@ -62,17 +63,18 @@ for row in range(rows):
         #cv2.imwrite("cropped_apple.png", cropped)
 
         gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
-        # kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
-        # sharpened = cv2.filter2D(gray, -1, kernel)
-        _, thresh = cv2.threshold(gray, 220, 255, cv2.THRESH_BINARY_INV)
+
+        _, thresh = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY_INV)
+        cv2.floodFill(thresh, None, seedPoint=(0, 0), newVal=255)
+        blurred = cv2.GaussianBlur(thresh, (3,3), 0)
+        kernel = np.array([[sharp, sharp, sharp], [sharp, 9, sharp], [sharp, sharp, sharp]])
+        sharpened = cv2.filter2D(thresh, -1, kernel)
         #thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                         #cv2.THRESH_BINARY_INV, 11, 2)
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
-        morphed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-        resized = cv2.resize(morphed, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_CUBIC)
+        # resized = cv2.resize(morphed, None, fx=1.3, fy=1.3, interpolation=cv2.INTER_CUBIC)
         
         
-        cv2.imwrite("cropped_apple.png", morphed)
+        cv2.imwrite("cropped_apple.png", sharpened)
 
         number = pytesseract.image_to_string(Image.open("cropped_apple.png"), 
                                             config='--psm 10 --oem 3 -c tessedit_char_whitelist=123456789 -c tessedit_char_blacklist=0OQqg --dpi 300')
