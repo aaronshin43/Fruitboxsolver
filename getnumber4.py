@@ -72,7 +72,7 @@ blurred = cv2.GaussianBlur(thresh, (3,3), 0)
 kernel = np.array([[sharp, sharp, sharp], [sharp, 9, sharp], [sharp, sharp, sharp]])
 sharpened = cv2.filter2D(thresh, -1, kernel)
 
-cv2.imwrite("cropped_apple.png", sharpened)
+cv2.imwrite("preprocessed_apple.png", sharpened)
 
 # Load a reference number
 templates = {str(i): cv2.imread(f"data/{i}.png", 0) for i in range(1, 10)}  
