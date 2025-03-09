@@ -24,7 +24,7 @@ pip install opencv-python numpy pyautogui
 2. Run the script:
 
 ```sh
-python solver.py
+python main.py
 ```
 
 3. The program will detect the game board, analyze the grid, and automatically play the game.
