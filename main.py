@@ -3,6 +3,13 @@ import numpy as np
 import pyautogui
 import time
 
+# Define a standard reference size (width, height)
+REFERENCE_SIZE = (1063, 689)  # Adjust based on game board size
+
+def resize_canvas(canvas):
+    """Resize the captured game area to a fixed reference size."""
+    return cv2.resize(canvas, REFERENCE_SIZE, interpolation=cv2.INTER_LINEAR)
+
 time.sleep(2)
 # Capture the full screen
 screen = pyautogui.screenshot()
@@ -27,6 +34,7 @@ if contours:
     
     # Crop the canvas from the screen
     canvas = screen_bgr[y:y+h, x:x+w]
+    canvas = resize_canvas(canvas)
 else:
     print("Game Screen Not Detected!")
 
