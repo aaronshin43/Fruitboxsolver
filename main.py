@@ -181,9 +181,9 @@ def make_move(r1, c1, r2, c2):
     distance = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
     # Adjust duration based on distance
-    base_speed = 0.002  # Base time per pixel (adjust as needed)
-    min_duration = 0.1  # Minimum movement time
-    max_duration = 1.0  # Maximum movement time
+    base_speed = 0.001  # Base time per pixel (adjust as needed)
+    min_duration = 0.2  # Minimum movement time
+    max_duration = 0.8  # Maximum movement time
 
     duration = min_duration + base_speed * distance
     duration = min(max_duration, max(min_duration, duration))  # Clamp between min and max
