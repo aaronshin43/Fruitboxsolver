@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 
-#This approach removes the largest group of apple that sums 10.
+#This approach removes the smallest group of apple that sums 10.
 scores = []
 
 #Testing for score stats
@@ -44,12 +44,13 @@ for i in range (100):
                             valid_boxes.append(((r1, c1, r2, c2), apples_removed))
 
         # Sort by max apples removed
-        valid_boxes.sort(key=lambda x: -x[1])
+        valid_boxes.sort(key=lambda x: x[1])
 
         # Execute best move
         if valid_boxes:
             best_move = valid_boxes[0]
             r1, c1, r2, c2 = best_move[0]
+            #print(best_move)
             grid[r1:r2+1, c1:c2+1] = 0
             score += best_move[1]
         else:
@@ -65,16 +66,31 @@ print(f"lowest score:{scores[0]}")
 print(f"highest score:{scores[len(scores)-1]}")
 
 '''
-100 games
+Largest group
 case 1:
 average score: 99.16
 median score: 100
 lowest score:72
 highest score:131
 
-case2:
+case 2:
 average score: 96.3
 median score: 96
 lowest score:62
 highest score:125
+'''
+
+'''
+Smallest group
+case 1:
+average score: 114.83
+median score: 117
+lowest score:83
+highest score:144
+
+case 2:
+average score: 113.06
+median score: 114
+lowest score:59
+highest score:151
 '''
