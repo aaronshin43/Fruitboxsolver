@@ -7,7 +7,7 @@ This project is a Python-based automation tool that plays a [Fruitbox](https://w
 ## Features
 - **Automated Screen Capture**: Uses `pyautogui` to take a screenshot of the game.
 - **Image Processing**: Utilizes `OpenCV` to detect the game board and recognize numbers.
-- **Optimal Move Selection**: Implements a prefix sum approach to find the best moves that remove the maximum apples.
+- **Optimal Move Selection**: Implements a prefix sum approach to find the best moves that remove the minimum apples.
 - **Automated Mouse Control**: Uses `pyautogui` to select and drag boxes around apples.
 
 ## Installation
@@ -20,7 +20,7 @@ pip install opencv-python numpy pyautogui
 
 ## Usage
 
-1. Start the game in your browser. Make sure the zoom level of the browser is 100%
+1. Start the game in your browser.
 2. Run the script:
 
 ```sh
@@ -41,7 +41,6 @@ python solver.py
 ## Future Improvements
 - Optimize move selection to consider alternative strategies.
 - Enhance efficiency of grid processing and updating.
-- Improve number recognition on different screen resolutions.
 
 ## License
 This project is licensed under the MIT License.
