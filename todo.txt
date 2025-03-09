@@ -1,5 +1,0 @@
-get Image - done
-get numbers from Image - done
-Need to consider the window size (or zoom) of browser that changes the size of canvas
-create mapping for numbers - done
-create algorithm to solve the game
