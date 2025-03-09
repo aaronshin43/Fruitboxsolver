@@ -169,12 +169,23 @@ def make_move(r1, c1, r2, c2):
     x1, y1 = get_start_position(r1, c1)
     x2, y2 = get_end_position(r2, c2)
 
+    # Calculate Euclidean distance
+    distance = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    # Adjust duration based on distance
+    base_speed = 0.002  # Base time per pixel (adjust as needed)
+    min_duration = 0.1  # Minimum movement time
+    max_duration = 1.0  # Maximum movement time
+
+    duration = min_duration + base_speed * distance
+    duration = min(max_duration, max(min_duration, duration))  # Clamp between min and max
+
     # Move to the first point and start dragging
     pyautogui.moveTo(x1, y1, duration=0.1)
     pyautogui.mouseDown()
 
     # Drag to the second point
-    pyautogui.moveTo(x2, y2, duration=0.5)
+    pyautogui.moveTo(x2, y2, duration=duration)
     pyautogui.mouseUp()
 
     time.sleep(0.1) 
