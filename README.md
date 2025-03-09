@@ -1,6 +1,8 @@
 # Fruitbox Game Solver
 
-This project is a Python-based automation tool that plays a web-based puzzle game where apples with numbers (1-9) must be enclosed in boxes that sum to 10. The program maximizes the score by selecting the optimal box to remove and iterates until no valid moves remain.
+This project is a Python-based automation tool that plays a [Fruitbox](https://www.gamesaien.com/game/fruit_box_a/) game where apples with numbers (1-9) must be enclosed in boxes that sum to 10. The program maximizes the score by selecting the optimal box to remove and iterates until no valid moves remain.
+<img src="https://github.com/user-attachments/assets/070c9ba5-3ab6-493c-9729-03ccec5f9471" width=400>
+<img src="https://github.com/user-attachments/assets/d6a30915-2f8f-424b-98f9-6433c48bca42" width=400>
 
 ## Features
 - **Automated Screen Capture**: Uses `pyautogui` to take a screenshot of the game.
