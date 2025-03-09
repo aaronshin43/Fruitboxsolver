@@ -212,8 +212,8 @@ while True:
                         apples_removed = np.count_nonzero(sorted_grid[r1:r2+1, c1:c2+1])
                         valid_boxes.append(((r1, c1, r2, c2), apples_removed))
 
-    # Sort by max apples removed
-    valid_boxes.sort(key=lambda x: -x[1])
+    # Sort by min apples removed
+    valid_boxes.sort(key=lambda x: x[1])
 
     # Execute best move
     if valid_boxes:
