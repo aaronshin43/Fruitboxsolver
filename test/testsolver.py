@@ -59,5 +59,5 @@ for i in range(20):
         scores[1] += 1
 
 print(f"max: {scores[0]}, min: {scores[1]}, la: {scores[2]}")
-
+#max: 2, min: 15, la: 3
 #print(f"Final Score: {score}")
