@@ -34,12 +34,21 @@ def get_valid_moves(grid, prefix_sum):
     valid_moves.sort(key=lambda x: x[1])
     return valid_moves
 
-def simulate_move(grid, move):
-    """Simulate a move by removing apples and returning a new grid state."""
-    r1, c1, r2, c2 = move
-    new_grid = grid.copy()
-    new_grid[r1:r2+1, c1:c2+1] = 0
-    return new_grid
+def max_removal_strategy(grid):
+    """Strategy: Remove the most apples in one move."""
+    prefix_sum = compute_prefix_sum(grid)
+    valid_moves = get_valid_moves(grid, prefix_sum)
+    if valid_moves:
+        return max(valid_moves, key=lambda x: x[1])[0]  # Move that removes most apples
+    return None
+
+def min_removal_strategy(grid):
+    """Strategy: Remove the least apples in one move."""
+    prefix_sum = compute_prefix_sum(grid)
+    valid_moves = get_valid_moves(grid, prefix_sum)
+    if valid_moves:
+        return min(valid_moves, key=lambda x: x[1])[0]  # Move that removes least apples
+    return None
 
 def look_ahead(grid, depth):
     """Simulate multiple moves ahead and pick the best initial move."""
@@ -56,7 +65,10 @@ def look_ahead(grid, depth):
     best_move = None
 
     for move, apples_removed in valid_moves:
-        new_grid = simulate_move(grid, move)
+        new_grid = grid.copy()
+        r1, c1, r2, c2 = move
+        new_grid[r1:r2+1, c1:c2+1] = 0  # Simulate move
+
         future_score, _ = look_ahead(new_grid, depth - 1)  # Look deeper
         total_score = apples_removed + future_score  # Score = now + future
 
@@ -72,7 +84,6 @@ def look_ahead_strategy(grid, depth=2):
     """Wrapper function to return just the best move."""
     _, best_move = look_ahead(grid, depth)
     return best_move
-
 
 '''
 100 games
