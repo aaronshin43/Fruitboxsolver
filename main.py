@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import pyautogui
 import time
+import solver
+import copy
 
 # Define a standard reference size (width, height)
 REFERENCE_SIZE = (1063, 689)  # Adjust based on game board size
@@ -200,6 +202,45 @@ def make_move(r1, c1, r2, c2):
 
     time.sleep(0.1) 
 
+def simulate_strategy(grid, strategy_func, depth=None):
+    """Simulate the given strategy and return the final score."""
+    grid_copy = copy.deepcopy(grid)  # Make a copy so original board isn't affected
+    score = 0
+
+    while True:
+        if strategy_func == solver.look_ahead_strategy:
+            best_move = strategy_func(grid_copy, depth)
+        else:
+            best_move = strategy_func(grid_copy)
+
+        if best_move is None:
+            break  # No more valid moves
+
+        r1, c1, r2, c2 = best_move
+        apples_removed = np.count_nonzero(grid_copy[r1:r2+1, c1:c2+1])
+        score += apples_removed
+        grid_copy[r1:r2+1, c1:c2+1] = 0  # Apply move
+
+    return score
+
+def choose_best_strategy(grid):
+    """Simulate all strategies and choose the best one based on final score."""
+    score_max = simulate_strategy(grid, solver.max_removal_strategy)
+    score_min = simulate_strategy(grid, solver.min_removal_strategy)
+    score_look_ahead = simulate_strategy(grid, solver.look_ahead_strategy, depth=2)
+
+    # Pick the strategy with the highest final score
+    strategy_scores = {
+        "max_removal": score_max,
+        "min_removal": score_min,
+        "look_ahead": score_look_ahead
+    }
+    
+    best_strategy = max(strategy_scores, key=strategy_scores.get)
+    print(f"Max Removal: {strategy_scores.get("max_removal")}\nMin Removal: {strategy_scores.get("min_removal")}\nlook Ahead: {strategy_scores.get("look_ahead")}")
+
+    return best_strategy
+
 #Start the Game
 time.sleep(2)
 canvas_list = get_canvas()
@@ -246,56 +287,30 @@ detected_numbers = {(int(x), int(y)): int(num) for (x, y), num in detected_numbe
 cleaned_numbers = remove_redundant_detections(detected_numbers)
 #print(f"Detected {len(cleaned_numbers)} numbers")
 
-sorted_grid = sort_numbers(cleaned_numbers)
+grid = sort_numbers(cleaned_numbers)
 #print(sorted_grid)
 
-# Solve the game
+# Main game loop
 score = 0
+best_strategy = choose_best_strategy(grid)
+
 while True:
-    # Compute prefix sum matrix
-    prefix_sum = np.zeros((11, 18), dtype=int)  # One extra row and column for boundary conditions
-
-    for r in range(10):
-        for c in range(17):
-            prefix_sum[r + 1, c + 1] = (
-                sorted_grid[r, c]
-                + prefix_sum[r, c + 1]
-                + prefix_sum[r + 1, c]
-                - prefix_sum[r, c]
-            )
-
-    # List of valid boxes found
-    valid_boxes = []
-
-    # Iterate over all possible rectangles
-    for r1 in range(10):
-        for c1 in range(17):
-            for r2 in range(r1, 10):
-                for c2 in range(c1, 17):
-                    total = (
-                        prefix_sum[r2 + 1, c2 + 1]
-                        - prefix_sum[r1, c2 + 1]
-                        - prefix_sum[r2 + 1, c1]
-                        + prefix_sum[r1, c1]
-                    )
-                    if total == 10:
-                        apples_removed = np.count_nonzero(sorted_grid[r1:r2+1, c1:c2+1])
-                        valid_boxes.append(((r1, c1, r2, c2), apples_removed))
-
-    # Sort by min apples removed
-    valid_boxes.sort(key=lambda x: x[1])
-
-    # Execute best move
-    if valid_boxes:
-        best_move = valid_boxes[0]
-        r1, c1, r2, c2 = best_move[0]
-        # Simulate the move on the screen
-        make_move(r1, c1, r2, c2)
-
-        # Update the grid and score
-        sorted_grid[r1:r2+1, c1:c2+1] = 0
-        score += best_move[1]
+    if best_strategy == "look_ahead":
+        best_move = solver.look_ahead_strategy(grid, depth = 2)
+    elif best_strategy == "max_removal":
+        best_move = solver.max_removal_strategy(grid)
     else:
-        #print(sorted_grid)
-        #print(f"Final Score: {score}")
+        best_move = solver.min_removal_strategy(grid)
+
+    if best_move is None:
+        #print("No valid moves found. Game Over.")
         break
+
+    r1, c1, r2, c2 = best_move
+    # Simulate the move on the screen
+    make_move(r1, c1, r2, c2)
+    apples_removed = np.count_nonzero(grid[r1:r2+1, c1:c2+1])
+    score += apples_removed
+    grid[r1:r2+1, c1:c2+1] = 0  # Apply move
+
+#print(f"Final Score: {score}")
