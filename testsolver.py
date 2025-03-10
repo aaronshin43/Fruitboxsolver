@@ -3,7 +3,7 @@ import solver
 import copy
 
 # Initialize game board (Example: random numbers 1-9)
-grid = np.random.randint(1, 10, (10, 17))
+
 
 def simulate_strategy(grid, strategy_func, depth=None):
     """Simulate the given strategy and return the final score."""
@@ -40,30 +40,24 @@ def choose_best_strategy(grid):
     }
     print(strategy_scores)
     best_strategy = max(strategy_scores, key=strategy_scores.get)
-    print(f"Chosen Strategy: {best_strategy}, Expected Score: {strategy_scores[best_strategy]}")
+    #print(f"Chosen Strategy: {best_strategy}, Expected Score: {strategy_scores[best_strategy]}")
 
     return best_strategy
 
 # Main game loop
-score = 0
-best_strategy = choose_best_strategy(grid)
+#score = 0
 
-while True:
+scores = [0,0,0]
+for i in range(20):
+    grid = np.random.randint(1, 10, (10, 17))
+    best_strategy = choose_best_strategy(grid)
     if best_strategy == "look_ahead":
-        best_move = solver.look_ahead_strategy(grid, depth = 2)
+        scores[2] += 1
     elif best_strategy == "max_removal":
-        best_move = solver.max_removal_strategy(grid)
+        scores[0] += 1
     else:
-        best_move = solver.min_removal_strategy(grid)
+        scores[1] += 1
 
-    if best_move is None:
-        #print("No valid moves found. Game Over.")
-        break
+print(f"max: {scores[0]}, min: {scores[1]}, la: {scores[2]}")
 
-    r1, c1, r2, c2 = best_move
-    apples_removed = np.count_nonzero(grid[r1:r2+1, c1:c2+1])
-    score += apples_removed
-    grid[r1:r2+1, c1:c2+1] = 0  # Apply move
-
-
-print(f"Final Score: {score}")
+#print(f"Final Score: {score}")
