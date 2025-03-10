@@ -7,7 +7,7 @@ This project is a Python-based automation tool that plays a [Fruitbox](https://w
 ## Features
 - **Automated Screen Capture**: Uses `pyautogui` to take a screenshot of the game.
 - **Image Processing**: Utilizes `OpenCV` to detect the game board and recognize numbers.
-- **Optimal Move Selection**: Implements a prefix sum approach to find the best moves that remove the minimum apples.
+- **Optimal Move Selection**: Implements a prefix sum approach to find the best strategy that gets highest score.
 - **Automated Mouse Control**: Uses `pyautogui` to select and drag boxes around apples.
 
 ## Installation
@@ -34,7 +34,7 @@ python main.py
 
 1. **Detects the Game Board**: Identifies the green background and crops the relevant area.
 2. **Extracts Numbers**: Uses template matching to recognize numbers on the grid.
-3. **Finds Optimal Moves**: Computes all valid boxes where the sum is 10.
+3. **Finds Optimal Moves**: Computes all valid boxes where the sum is 10. Pick the best strategy among three: 1. Remove the most apples in one move. 2. Remove the least apples in one move. 3. Simulate 2 moves ahead and pick the best initial move
 4. **Executes Moves**: Simulates mouse drag actions to select and remove the optimal box.
 5. **Repeats Until No Moves Left**: Iterates the process until no more valid moves exist.
 
