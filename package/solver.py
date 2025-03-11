@@ -1,5 +1,4 @@
 import numpy as np
-import itertools
 
 def compute_prefix_sum(grid):
     """Compute prefix sum matrix for efficient region sum calculation."""
@@ -85,11 +84,51 @@ def look_ahead_strategy(grid, depth=2):
     _, best_move = look_ahead(grid, depth)
     return best_move
 
-'''
-100 games
-case 1:
-average score: 99.11
-median score: 100
-lowest score:74
-highest score:124
-'''
+def max_num(grid):
+    """Find the valid move with largest number."""
+    # Compute prefix sum matrix for fast sum calculations
+    prefix_sum = compute_prefix_sum(grid)
+
+    valid_moves = []
+
+    # Iterate over all possible rectangles
+    for r1 in range(10):
+        for c1 in range(17):
+            for r2 in range(r1, 10):
+                for c2 in range(c1, 17):
+                    total = (
+                        prefix_sum[r2 + 1, c2 + 1]
+                        - prefix_sum[r1, c2 + 1]
+                        - prefix_sum[r2 + 1, c1]
+                        + prefix_sum[r1, c1]
+                    )
+                    if total == 10:
+                        apples = grid[r1:r2+1, c1:c2+1].flatten()
+                        apples = apples[apples > 0]  # Ignore zeros
+
+                        # Compute the maximum value
+                        max_num = max(apples)
+
+                        apples_removed = len(apples)
+                        valid_moves.append(((r1, c1, r2, c2), max_num, apples_removed))
+    return valid_moves
+
+def large_num_strategy(grid):
+    # Sort by min apples removed, then highest number 
+    valid_moves = max_num(grid)
+    valid_moves.sort(key=lambda x: (x[2], x[1]))
+
+    if valid_moves:
+        return valid_moves[0][0]  # Best move (r1, c1, r2, c2)
+
+    return None  # No valid moves found
+
+def small_num_strategy(grid):
+    valid_moves = max_num(grid)
+    # Sort by min apples removed, then smallest number 
+    valid_moves.sort(key=lambda x: (x[2], -x[1]))
+
+    if valid_moves:
+        return valid_moves[0][0]  # Best move (r1, c1, r2, c2)
+
+    return None  # No valid moves found
