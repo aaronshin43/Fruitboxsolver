@@ -84,7 +84,9 @@ def remove_redundant_detections(detected_numbers, distance_threshold=20):
             ((x2, y2), n) for (x2, y2), n in detected_list
             if np.linalg.norm(np.array([x, y]) - np.array([x2, y2])) > distance_threshold
         ]
-    
+    if len(filtered_numbers) != 170:
+        print(f"Failed to detect {170-len(filtered_numbers)} numbers")
+        exit(1)
     return filtered_numbers
 
 def sort_numbers(detected_numbers):
@@ -166,10 +168,10 @@ def get_position(row, col, row1, col1):
     :return: int of screen coordinates of starting/ending rows/columns
     """
 
-    x = apple_x + col * cell_w - (col/2)
+    x = apple_x + col * (w/21.48) - w/170
     y = apple_y + row * cell_h
-    x1 = apple_x + col1 * cell_w + cell_w + (cell_w/6) * np.log(col1+1) + (cell_w/8)
-    y1 = apple_y + row1 * cell_h + cell_h + (cell_h/6) * np.log(row1+2) + (cell_h/8)
+    x1 = apple_x + (col1+1) * (w/21.5)
+    y1 = apple_y + (row1+1) * (h/13.94) + h/145
     return x, y, x1, y1
 
 def make_move(r1, c1, r2, c2):
@@ -181,37 +183,24 @@ def make_move(r1, c1, r2, c2):
     :param col1: int of grid position of ending column"""
     x1, y1, x2, y2 = get_position(r1, c1, r2, c2)
 
-    # Calculate Euclidean distance
-    distance = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-
-    # Adjust duration based on distance
-    base_speed = 0.001  # Base time per pixel 
-    min_duration = 0.2  # Minimum movement time
-    max_duration = 0.8  # Maximum movement time
-
-    duration = min_duration + base_speed * distance
-    duration = min(max_duration, max(min_duration, duration))  # Clamp between min and max
-
     # Move to the first point and start dragging
     pyautogui.moveTo(x1, y1, duration=0.1)
     pyautogui.mouseDown()
 
     # Drag to the second point
-    pyautogui.moveTo(x2, y2, duration=duration)
+    pyautogui.moveTo(x2, y2, duration=0.5)
+    time.sleep(0.05) 
     pyautogui.mouseUp()
 
-    time.sleep(0.1) 
+    time.sleep(0.05) 
 
-def simulate_strategy(grid, strategy_func, depth=None):
+def simulate_strategy(grid, strategy_func):
     """Simulate the given strategy and return the final score."""
     grid_copy = copy.deepcopy(grid)  # Make a copy so original board isn't affected
     score = 0
 
     while True:
-        if strategy_func == solver.look_ahead_strategy:
-            best_move = strategy_func(grid_copy, depth)
-        else:
-            best_move = strategy_func(grid_copy)
+        best_move = strategy_func(grid_copy)
 
         if best_move is None:
             break  # No more valid moves
@@ -272,7 +261,7 @@ detected_numbers = {}
 for num, template in templates.items():
     res = cv2.matchTemplate(sharpened, template, cv2.TM_CCORR_NORMED)
     
-    threshold = 0.96  # Adjust this based on accuracy
+    threshold = 0.97  # Adjust this based on accuracy
     loc = np.where(res >= threshold)  # Get locations where match quality is high
 
     for pt in zip(*loc[::-1]):  # Iterate over matching locations
@@ -307,6 +296,7 @@ while True:
     r1, c1, r2, c2 = best_move
     # Simulate the move on the screen
     make_move(r1, c1, r2, c2)
+    #print(grid[r1:r2+1, c1:c2+1])
     apples_removed = np.count_nonzero(grid[r1:r2+1, c1:c2+1])
     score += apples_removed
     grid[r1:r2+1, c1:c2+1] = 0  # Apply move
