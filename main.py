@@ -225,20 +225,18 @@ def simulate_strategy(grid, strategy_func, depth=None):
 
 def choose_best_strategy(grid):
     """Simulate all strategies and choose the best one based on final score."""
-    score_max = simulate_strategy(grid, solver.max_removal_strategy)
     score_min = simulate_strategy(grid, solver.min_removal_strategy)
-    score_look_ahead = simulate_strategy(grid, solver.look_ahead_strategy, depth=2)
-
+    score_high_val = simulate_strategy(grid, solver.max_value_strategy)
+    score_low_val = simulate_strategy(grid, solver.min_value_strategy)
     # Pick the strategy with the highest final score
     strategy_scores = {
-        "max_removal": score_max,
         "min_removal": score_min,
-        "look_ahead": score_look_ahead
+        "high_val": score_high_val,
+        "low_val": score_low_val
     }
-    
+    #print(strategy_scores)
     best_strategy = max(strategy_scores, key=strategy_scores.get)
-    print(f"Max Removal: {strategy_scores.get("max_removal")}\nMin Removal: {strategy_scores.get("min_removal")}\nlook Ahead: {strategy_scores.get("look_ahead")}")
-
+    print(f"Using {best_strategy} strategy.\nExpected score: {strategy_scores.get(best_strategy)}")
     return best_strategy
 
 #Start the Game
@@ -274,7 +272,7 @@ detected_numbers = {}
 for num, template in templates.items():
     res = cv2.matchTemplate(sharpened, template, cv2.TM_CCORR_NORMED)
     
-    threshold = 0.97  # Adjust this based on accuracy
+    threshold = 0.96  # Adjust this based on accuracy
     loc = np.where(res >= threshold)  # Get locations where match quality is high
 
     for pt in zip(*loc[::-1]):  # Iterate over matching locations
@@ -295,12 +293,12 @@ score = 0
 best_strategy = choose_best_strategy(grid)
 
 while True:
-    if best_strategy == "look_ahead":
-        best_move = solver.look_ahead_strategy(grid, depth = 2)
-    elif best_strategy == "max_removal":
-        best_move = solver.max_removal_strategy(grid)
-    else:
+    if best_strategy == "min_removal":
         best_move = solver.min_removal_strategy(grid)
+    elif best_strategy == "high_val":
+        best_move = solver.max_value_strategy(grid)
+    else:
+        best_move = solver.min_value_strategy(grid)
 
     if best_move is None:
         #print("No valid moves found. Game Over.")
