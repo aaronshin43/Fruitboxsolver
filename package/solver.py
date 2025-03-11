@@ -132,12 +132,3 @@ def min_value_strategy(grid):
         return valid_moves[0][0]  # Best move (r1, c1, r2, c2)
 
     return None  # No valid moves found
-
-'''
-100 games
-case 1:
-average score: 99.11
-median score: 100
-lowest score:74
-highest score:124
-'''
