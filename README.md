@@ -4,14 +4,14 @@ This project is a Python-based automation tool that plays a [Fruitbox](https://w
 <img src="https://github.com/user-attachments/assets/070c9ba5-3ab6-493c-9729-03ccec5f9471" width=400>
 <img src="https://github.com/user-attachments/assets/d6a30915-2f8f-424b-98f9-6433c48bca42" width=400>
 
-## Demo Run
-https://github.com/user-attachments/assets/898d43ae-23f6-452e-adde-8153c0b9a9db
-
 ## Features
 - **Automated Screen Capture**: Uses `pyautogui` to take a screenshot of the game.
 - **Image Processing**: Utilizes `OpenCV` to detect the game board and recognize numbers.
 - **Optimal Move Selection**: Implements a prefix sum approach to find the best strategy that gets highest score.
 - **Automated Mouse Control**: Uses `pyautogui` to select and drag boxes around apples.
+  
+## Demo Run
+https://github.com/user-attachments/assets/898d43ae-23f6-452e-adde-8153c0b9a9db
 
 ## Installation
 
