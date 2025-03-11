@@ -215,17 +215,23 @@ def simulate_strategy(grid, strategy_func):
 def choose_best_strategy(grid):
     """Simulate all strategies and choose the best one based on final score."""
     score_min = simulate_strategy(grid, solver.min_removal_strategy)
-    score_high_val = simulate_strategy(grid, solver.max_value_strategy)
-    score_low_val = simulate_strategy(grid, solver.min_value_strategy)
+    score_large_num = simulate_strategy(grid, solver.large_num_strategy)
+    score_small_num = simulate_strategy(grid, solver.small_num_strategy)
     # Pick the strategy with the highest final score
     strategy_scores = {
         "min_removal": score_min,
-        "high_val": score_high_val,
-        "low_val": score_low_val
+        "large_num": score_large_num,
+        "small_num": score_small_num
     }
     #print(strategy_scores)
     best_strategy = max(strategy_scores, key=strategy_scores.get)
-    print(f"Using {best_strategy} strategy.\nExpected score: {strategy_scores.get(best_strategy)}")
+    if best_strategy == "min_removal":
+        print("Startegy: Target Smallest Group")
+    elif best_strategy == "large_num":
+        print("Startegy: Target Large Number")
+    else:
+        print("Startegy: Target Small Number")
+    print(f"Expected score: {strategy_scores.get(best_strategy)}")
     return best_strategy
 
 #Start the Game
@@ -284,10 +290,10 @@ best_strategy = choose_best_strategy(grid)
 while True:
     if best_strategy == "min_removal":
         best_move = solver.min_removal_strategy(grid)
-    elif best_strategy == "high_val":
-        best_move = solver.max_value_strategy(grid)
+    elif best_strategy == "large_num":
+        best_move = solver.large_num_strategy(grid)
     else:
-        best_move = solver.min_value_strategy(grid)
+        best_move = solver.small_num_strategy(grid)
 
     if best_move is None:
         #print("No valid moves found. Game Over.")
@@ -296,7 +302,7 @@ while True:
     r1, c1, r2, c2 = best_move
     # Simulate the move on the screen
     make_move(r1, c1, r2, c2)
-    #print(grid[r1:r2+1, c1:c2+1])
+    print(grid[r1:r2+1, c1:c2+1])
     apples_removed = np.count_nonzero(grid[r1:r2+1, c1:c2+1])
     score += apples_removed
     grid[r1:r2+1, c1:c2+1] = 0  # Apply move

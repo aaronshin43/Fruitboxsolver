@@ -85,7 +85,7 @@ def look_ahead_strategy(grid, depth=2):
     return best_move
 
 def max_num(grid):
-    """Find the best move by prioritizing the removal of low numbers."""
+    """Find the valid move with largest number."""
     # Compute prefix sum matrix for fast sum calculations
     prefix_sum = compute_prefix_sum(grid)
 
@@ -113,7 +113,7 @@ def max_num(grid):
                         valid_moves.append(((r1, c1, r2, c2), max_num, apples_removed))
     return valid_moves
 
-def max_value_strategy(grid):
+def large_num_strategy(grid):
     # Sort by min apples removed, then highest number 
     valid_moves = max_num(grid)
     valid_moves.sort(key=lambda x: (x[2], x[1]))
@@ -123,7 +123,7 @@ def max_value_strategy(grid):
 
     return None  # No valid moves found
 
-def min_value_strategy(grid):
+def small_num_strategy(grid):
     valid_moves = max_num(grid)
     # Sort by min apples removed, then smallest number 
     valid_moves.sort(key=lambda x: (x[2], -x[1]))
