@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pyautogui
 import time
-import solver
+import package.solver as solver
 import copy
 
 # Define a standard reference size (width, height)
