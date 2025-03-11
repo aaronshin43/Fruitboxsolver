@@ -34,13 +34,10 @@ python main.py
 
 1. **Detects the Game Board**: Identifies the green background and crops the relevant area.
 2. **Extracts Numbers**: Uses template matching to recognize numbers on the grid.
-3. **Finds Optimal Moves**: Computes all valid boxes where the sum is 10. Pick the best strategy among three: 1. Remove the most apples in one move. 2. Remove the least apples in one move. 3. Simulate 2 moves ahead and pick the best initial move
+3. **Finds Optimal Moves**: Computes all valid boxes where the sum is 10. Simulate three strategies and pick the best one: 1. Remove the least apples in one move. 2. Remove the least apples in one move that contains large numbers (i.e. 8 or 9). 3. Remove the least apples in one move that contains small numbers (i.e. 1 or 2)
 4. **Executes Moves**: Simulates mouse drag actions to select and remove the optimal box.
 5. **Repeats Until No Moves Left**: Iterates the process until no more valid moves exist.
 
 ## Future Improvements
 - Optimize move selection to consider alternative strategies.
 - Enhance efficiency of grid processing and updating.
-
-## License
-This project is licensed under the MIT License.
