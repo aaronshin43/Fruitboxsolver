@@ -185,14 +185,13 @@ def make_move(r1, c1, r2, c2):
 
     # Move to the first point and start dragging
     pyautogui.moveTo(x1, y1, duration=0.1)
+    time.sleep(0.05)
     pyautogui.mouseDown()
 
     # Drag to the second point
-    pyautogui.moveTo(x2, y2, duration=0.5)
+    pyautogui.moveTo(x2, y2, duration=0.8)
     time.sleep(0.05) 
     pyautogui.mouseUp()
-
-    time.sleep(0.05) 
 
 def simulate_strategy(grid, strategy_func):
     """Simulate the given strategy and return the final score."""
